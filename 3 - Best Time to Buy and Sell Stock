@@ -1,0 +1,89 @@
+Best Time to Buy and Sell Stock
+Problem: You're given an array prices where prices[i] is the price of a stock on day i. You want to maximize profit by choosing a single day to buy and a later day to sell. Return the max profit — if no profit is possible, return 0.
+Example:
+Input: prices = [7,1,5,3,6,4]
+Output: 5
+// Buy on day 1 (price=1), sell on day 4 (price=6), profit = 5
+
+Brute Force approach
+--------------------
+public class BestTimeBuySellStock {
+	public int maxProfit(int[] prices) {
+        int maxProfit = 0;
+        for (int i = 0; i < prices.length; i++) {
+			for (int j = i + 1; j < prices.length; j++) {
+				int profit = prices[j] - prices[i];
+				if (profit > maxProfit) {
+					maxProfit = profit;
+				}
+			}
+		}
+		return maxProfit;
+    }
+	public static void main(String[] args) {
+		BestTimeBuySellStock solution = new BestTimeBuySellStock();
+		int[] prices = { 7, 1, 5, 3, 6, 4 };
+		int maxProfit = solution.maxProfit(prices);
+		System.out.println("Maximum profit: " + maxProfit); // Output: Maximum profit: 5
+	}
+}
+
+Time Complexity: O(n^2) because the outer loop runs $n$ times and the inner loop runs roughly n times for each outer step. This will cause a "Time Limit Exceeded" error on large arrays on LeetCode.
+Space Complexity: O(1) because it only uses a few integer variables for tracking.
+
+Best approach
+---------------
+
+public class BestTimeBuySellStock {
+	public int maxProfit(int[] prices) {
+        int minPrice = prices[0]; 
+        int maxProfit = 0;
+        
+        // Start loop from the second element (index 1)
+        for (int i = 1; i < prices.length; i++) {
+            if (prices[i] < minPrice) {
+                minPrice = prices[i];
+            } else if (prices[i] - minPrice > maxProfit) {
+                maxProfit = prices[i] - minPrice;
+            }
+        }
+        
+        return maxProfit;
+    }
+	public static void main(String[] args) {
+		BestTimeBuySellStock solution = new BestTimeBuySellStock();
+		int[] prices = { 7, 1, 5, 3, 6, 4 };
+		int maxProfit = solution.maxProfit(prices);
+		System.out.println("Maximum profit: " + maxProfit); // Output: Maximum profit: 5
+	}
+}
+
+Time complexity: O(n) — single pass, exactly what we wanted.
+Space complexity: O(1) — just two variables.
+
+Best approach -2
+-----------------
+
+public class BestTimeBuySellStock {
+	public int maxProfit(int[] prices) {
+        int minPrice = Integer.MAX_VALUE; //Integer.MAX_VALUE is a constant in Java representing the largest possible value an int can hold: 2,147,483,647.
+        int maxProfit = 0;
+        
+        // Start loop from the second element (index 1)
+        for (int price : prices) {
+            if (price < minPrice) {
+                minPrice = price;
+            } else if (price - minPrice > maxProfit) {
+                maxProfit = price - minPrice;
+            }
+        }
+        
+        return maxProfit;
+    }
+	public static void main(String[] args) {
+		BestTimeBuySellStock solution = new BestTimeBuySellStock();
+		int[] prices = { 7, 1, 5, 3, 6, 4 };
+		int maxProfit = solution.maxProfit(prices);
+		System.out.println("Maximum profit: " + maxProfit); // Output: Maximum profit: 5
+	}
+}
