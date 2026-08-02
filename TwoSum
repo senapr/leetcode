@@ -1,0 +1,75 @@
+You are given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
+You may assume that each input would have exactly one solution, and you may not use the same element twice.
+You can return the answer in any order.
+Input: nums = [3,2,4], target = 6
+Output: [1,2]
+
+Brute Force Approach 
+---------------------
+
+public class TwoSum {
+	public int[] twoSum(int[] nums, int target) {
+		for (int i = 0; i < nums.length; i++) {
+			for (int j = i + 1; j < nums.length; j++) {
+				if (nums[i] + nums[j] == target) {
+					return new int[] { i, j };
+				}
+			}
+		}
+		return new int[] {};
+	}
+
+	public static void main(String[] args) {
+		TwoSum twoSum = new TwoSum();
+		int[] nums = { 2, 7, 11, 15 };
+		int target = 9;
+		int[] result = twoSum.twoSum(nums, target);
+		System.out.println(
+				"Indices of the two numbers that add up to " + target + ": [" + result[0] + ", " + result[1] + "]");
+	}
+}
+
+Time complexity: O(n²) — for every element, you're scanning the rest of the array. With large inputs, this gets slow fast.
+Space complexity: O(1), which is good, but you're trading space for time unnecessarily — there's a better balance available.
+
+
+HashMap Approach
+-----------------
+
+public class TwoSum {
+	public int[] twoSum(int[] nums, int target) {
+		// Create a hash map to store the numbers and their indices
+		Map<Integer, Integer> map = new HashMap<>();
+
+		// Iterate through the array
+		for (int i = 0; i < nums.length; i++) {
+			// Calculate the complement of the current number
+			int complement = target - nums[i];
+
+			// Check if the complement exists in the map
+			if (map.containsKey(complement)) {
+				// If it exists, return the indices of the two numbers
+				return new int[] { map.get(complement), i };
+			}
+
+			// If it doesn't exist, add the current number and its index to the map
+			map.put(nums[i], i);
+		}
+
+		// If no solution is found, return an empty array
+		return new int[0];
+	}
+
+	public static void main(String[] args) {
+		TwoSum twoSum = new TwoSum();
+		int[] nums = { 2, 7, 11, 15 };
+		int target = 9;
+		int[] result = twoSum.twoSum(nums, target);
+		System.out.println(
+				"Indices of the two numbers that add up to " + target + ": [" + result[0] + ", " + result[1] + "]");
+	}
+
+}
+
+Time complexity: O(n) — single pass, HashMap lookups are O(1) average.
+Space complexity: O(n) for the map — the right tradeoff for the time savings.
