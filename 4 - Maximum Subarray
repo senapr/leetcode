@@ -1,0 +1,89 @@
+Given an integer array nums, find the subarray with the largest sum, and return its sum.
+Example:
+Input: nums = [-2,1,-3,4,-1,2,1,-5,4]
+Output: 6
+Explanation: The subarray [4,-1,2,1] has the largest sum 6.
+
+Brute Force Approach
+---------------------
+
+public class MaximumSubarray {
+	public int maxSubArray(int[] nums) {
+        int maxSum = Integer.MIN_VALUE;
+
+        // Outer loop marks the starting index of the subarray
+        for (int i = 0; i < nums.length; i++) {
+            int currentSum = 0;
+            
+            // Inner loop marks the ending index and accumulates the sum
+            for (int j = i; j < nums.length; j++) {
+                currentSum += nums[j];
+                
+                // Update the maximum sum found so far
+                if (currentSum > maxSum) {
+                    maxSum = currentSum;
+                }
+            }
+        }
+        
+        return maxSum;
+    }
+	public static void main(String[] args) {
+		MaximumSubarray solution = new MaximumSubarray();
+		int[] nums = { -2, 1, -3, 4, -1, 2, 1, -5, 4 };
+		int maxSum = solution.maxSubArray(nums);
+		System.out.println("Maximum subarray sum: " + maxSum); // Output: Maximum subarray sum: 6
+	}
+}
+
+Time Complexity: O(n^2), where n is the number of elements in the input array. The outer loop runs n times, and for each iteration of the outer loop, the inner loop can run up to n times in the worst case, leading to a quadratic time complexity.
+Space Complexity: O(1), as we are using a constant amount of extra space regardless of the input size. The variables maxSum and currentSum do not depend on the size of the input array.
+
+Kadane's Algorithm
+--------------------
+
+public class MaximumSubarray {
+	public int maxSubArray(int[] nums) {
+		int currentSum = nums[0];
+        int maxSum = nums[0];
+
+        // Start from index 1 since currentSum/maxSum already include nums[0]
+        for (int i = 1; i < nums.length; i++) {
+            // Either extend the previous subarray, or start fresh at nums[i]
+            currentSum = Math.max(nums[i], currentSum + nums[i]);
+
+            // Track the best sum seen across all positions
+            maxSum = Math.max(maxSum, currentSum);
+        }
+
+        return maxSum;
+    }
+	public static void main(String[] args) {
+		MaximumSubarray solution = new MaximumSubarray();
+		int[] nums = { -2, 1, -3, 4, -1, 2, 1, -5, 4 };
+		int maxSum = solution.maxSubArray(nums);
+		System.out.println("Maximum subarray sum: " + maxSum); // Output: Maximum subarray sum: 6
+	}
+}
+
+Time Complexity: O(n), where n is the number of elements in the input array. We iterate through the array once, performing constant time operations for each element.
+Space Complexity: O(1), as we are using a fixed amount of space regardless of the input size.
+
+Explanation - 
+currentSum = Math.max(nums[i], currentSum + nums[i]);
+If currentSum (the running total up to the previous index) is positive, adding it helps — so currentSum + nums[i] wins.
+If currentSum is negative, it's dragging you down — you're better off abandoning it and starting fresh with just nums[i] alone.
+
+nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4]
+
+i=0: currentSum = -2, maxSum = -2  (initial)
+i=1: currentSum = max(1, -2+1=-1) = 1     maxSum = max(-2,1) = 1
+i=2: currentSum = max(-3, 1-3=-2) = -2    maxSum = max(1,-2) = 1
+i=3: currentSum = max(4, -2+4=2) = 4      maxSum = max(1,4) = 4
+i=4: currentSum = max(-1, 4-1=3) = 3      maxSum = max(4,3) = 4
+i=5: currentSum = max(2, 3+2=5) = 5       maxSum = max(4,5) = 5
+i=6: currentSum = max(1, 5+1=6) = 6       maxSum = max(5,6) = 6
+i=7: currentSum = max(-5, 6-5=1) = 1      maxSum = max(6,1) = 6
+i=8: currentSum = max(4, 1+4=5) = 5       maxSum = max(6,5) = 6
+
+Result: 6 (matches [4,-1,2,1])
