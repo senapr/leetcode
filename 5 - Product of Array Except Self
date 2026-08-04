@@ -1,0 +1,94 @@
+Given an integer array nums, return an array answer such that answer[i] is equal to the product of all the elements of nums except nums[i].
+The product of any prefix or suffix of nums is guaranteed to fit in a 32-bit integer.
+Example:
+Input: nums = [1,2,3,4]
+Output: [24,12,8,6]
+
+Brute force
+------------
+
+class Solution {
+    public int[] productExceptSelf(int[] nums) {
+        int n = nums.length;
+        int[] answer = new int[n];
+        
+        // Loop through each element in the array
+        for (int i = 0; i < n; i++) {
+            int currentProduct = 1;
+            
+            // Loop through all elements again to calculate the product
+            for (int j = 0; j < n; j++) {
+                // Skip the current element itself
+                if (i != j) {
+                    currentProduct *= nums[j];
+                }
+            }
+            
+            // Assign the computed product to the answer array
+            answer[i] = currentProduct;
+        }
+        
+        return answer;
+    }
+    public static void main(String[] args) {
+		ProductOfArray solution = new ProductOfArray();
+		int[] nums = {2,3,4,5};
+		int[] result = solution.productExceptSelf(nums);
+		System.out.print("Product of array except self: "+Arrays.toString(result));
+	}
+}
+
+Outer Loop (i): Iterates through each index where a result needs to be calculated.
+Inner Loop (j): Scans the entire array from scratch for every single index i.
+Conditional Check (i != j): Skips multiplying the element when the inner loop index matches the outer loop index.
+
+Optimal Way
+-----------
+
+public class ProductOfArray {
+	public int[] productExceptSelf(int[] nums) {
+		int n = nums.length;
+        int[] answer = new int[n];
+        
+        // Step 1: Calculate prefix products
+        // answer[i] will store the product of all elements to the left of index i
+        answer[0] = 1;
+        for (int i = 1; i < n; i++) {
+            answer[i] = answer[i - 1] * nums[i - 1];
+        }
+        
+        // Step 2: Calculate suffix products on the fly and multiply
+        // Maintain a running product of all elements to the right of index i
+        int suffixProduct = 1;
+        for (int i = n - 1; i >= 0; i--) {
+            answer[i] = answer[i] * suffixProduct;
+            suffixProduct *= nums[i];
+        }
+        
+        return answer;
+    }
+    
+	public static void main(String[] args) {
+		ProductOfArray solution = new ProductOfArray();
+		int[] nums = {2,3,4,5};
+		int[] result = solution.productExceptSelf(nums);
+		System.out.print("Product of array except self: "+Arrays.toString(result));
+	}
+}
+
+Time complexity: O(n) — two linear passes, no nesting.
+Space complexity: O(1) extra space (not counting the output array) — you used a single suffixProduct variable instead of a second array. That's the stretch goal, done.
+
+Pass 1 (prefix): answer = [1, 2, 6, 24]
+  answer[0]=1
+  answer[1]=1*2=2
+  answer[2]=2*3=6
+  answer[3]=6*4=24
+
+Pass 2 (suffix, right to left):
+  i=3: answer[3]=24*1=24,  suffixProduct=1*5=5
+  i=2: answer[2]=6*5=30,   suffixProduct=5*4=20
+  i=1: answer[1]=2*20=40,  suffixProduct=20*3=60
+  i=0: answer[0]=1*60=60,  suffixProduct=60*2=120
+
+Result: [60, 40, 30, 24]
