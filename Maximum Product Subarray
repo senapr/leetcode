@@ -1,0 +1,6 @@
+Problem: Given an integer array nums, find a contiguous subarray that has the largest product, and return that product.
+Example:
+Input: nums = [2,3,-2,4]
+Output: 6
+// [2,3] has the largest product = 6
+
