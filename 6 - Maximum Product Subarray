@@ -4,3 +4,28 @@ Input: nums = [2,3,-2,4]
 Output: 6
 // [2,3] has the largest product = 6
 
+Brute force approach
+--------------------
+
+public class MaximumProductSubarray {
+	public int maxProduct(int[] nums) {
+		int maxProd = Integer.MIN_VALUE;
+		for(int i=0;i<nums.length;i++) {
+			int currentProd = 1;
+			for (int j=i;j<nums.length;j++) {
+				currentProd = currentProd * nums[j];
+				if (currentProd>maxProd) {
+					maxProd = currentProd;
+				}
+			}
+		}
+		return maxProd;
+	}
+	public static void main(String[] args) {
+		MaximumProductSubarray solution = new MaximumProductSubarray();
+		int[] nums = { 2,3,-2,4 };
+		int maxSum = solution.maxProduct(nums);
+		System.out.println("Maximum product subarray: " + maxSum); 
+	}
+}
+
